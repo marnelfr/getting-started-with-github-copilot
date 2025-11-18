@@ -13,6 +13,23 @@ document.addEventListener("DOMContentLoaded", () => {
       // Clear loading message
       activitiesList.innerHTML = "";
 
+      // Reset activity select options (keep placeholder)
+      activitySelect.innerHTML = '<option value="">-- Select an activity --</option>';
+
+      // Helper to get initials from an email
+      function getInitials(email) {
+        if (!email) return "";
+        const local = email.split("@")[0] || "";
+        const parts = local.split(/[.\-_]/).filter(Boolean);
+        let initials = "";
+        if (parts.length === 0) {
+          initials = (local[0] || "").toUpperCase();
+        } else {
+          initials = parts.slice(0, 2).map(p => (p[0] || "").toUpperCase()).join("");
+        }
+        return initials || "?";
+      }
+
       // Populate activities list
       Object.entries(activities).forEach(([name, details]) => {
         const activityCard = document.createElement("div");
@@ -20,11 +37,31 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const spotsLeft = details.max_participants - details.participants.length;
 
+        // Build participants HTML
+        let participantsHtml = '<div class="participants-section"><h5>Participants</h5>';
+        if (!details.participants || details.participants.length === 0) {
+          participantsHtml += '<p class="no-participants">No participants yet</p>';
+        } else {
+          participantsHtml += '<ul class="participants-list">';
+          details.participants.forEach((email) => {
+            const initials = getInitials(email);
+            participantsHtml += `
+              <li class="participant-item">
+                <span class="participant-avatar" aria-hidden="true">${initials}</span>
+                <span class="participant-email">${email}</span>
+              </li>
+            `;
+          });
+          participantsHtml += '</ul>';
+        }
+        participantsHtml += '</div>';
+
         activityCard.innerHTML = `
           <h4>${name}</h4>
           <p>${details.description}</p>
           <p><strong>Schedule:</strong> ${details.schedule}</p>
           <p><strong>Availability:</strong> ${spotsLeft} spots left</p>
+          ${participantsHtml}
         `;
 
         activitiesList.appendChild(activityCard);
