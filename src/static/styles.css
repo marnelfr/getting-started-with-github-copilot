@@ -155,7 +155,9 @@ footer {
   color: #333;
 }
 
+
 .participants-list {
+  /* Remove bullet points and use flex for layout */
   list-style: none;
   padding: 0;
   margin: 0;
@@ -174,6 +176,7 @@ footer {
   border-radius: 6px;
   font-size: 14px;
   color: #444;
+  position: relative;
 }
 
 .participant-avatar {
@@ -194,6 +197,21 @@ footer {
 .participant-email {
   word-break: break-word;
   opacity: 0.95;
+}
+
+.delete-participant {
+  margin-left: auto;
+  color: #c62828;
+  font-size: 18px;
+  cursor: pointer;
+  transition: color 0.2s;
+  padding: 0 6px;
+  border-radius: 50%;
+  user-select: none;
+}
+.delete-participant:hover {
+  background: #ffeaea;
+  color: #a31515;
 }
 
 .no-participants {
